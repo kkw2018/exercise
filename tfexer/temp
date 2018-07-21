@@ -25,4 +25,3 @@ def extract_images(f):
     data = data.reshape(num_images, rows, cols, 1)
     return data
 
-   test
