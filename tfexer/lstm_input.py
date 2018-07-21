@@ -77,7 +77,7 @@ def processFile(posfile,negfile):
                    break
            lens[fileCounter] = indexCounter
            fileCounter = fileCounter + 1
-    np.save('idsMatrix', pids)
+    np.save('idsMatrix', ids)
     np.save('lens', lens)
 
 def getlabels(posfile,negfile):
@@ -101,5 +101,6 @@ lens = np.load("lens.npy")
 if not isfile("labels.npy"):
     getlabels(posfile, negfile)
 labels = np.load("labels.npy")
+print(lens[-80:-1])
 
 
