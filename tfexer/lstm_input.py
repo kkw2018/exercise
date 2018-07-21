@@ -6,11 +6,11 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 from os.path import isfile, join
 import re
 import codecs
-glove="C:/baiduyun/glove.6B.50d.txt"
+glove="E:/data/glove.6B/glove.6B.50d.txt"
 emb_size=50
 maxSeqLength=250
-posfile="C:/baiduyun/aclImdb/train/pos/"
-negfile="C:/baiduyun/aclImdb/train/neg/"
+posfile="E:/data/aclImdb_v1/aclImdb/train/pos/"
+negfile="E:/data/aclImdb_v1/aclImdb/train/neg/"
 def loadglove(glove):
     vocab = []
     embd = []
@@ -41,6 +41,7 @@ def processFile(posfile,negfile):
     numFiles=len(positiveFiles) + len(negativeFiles)
 
     ids = np.zeros((numFiles, maxSeqLength), dtype='int32')
+    lens = np.zeros(numFiles, dtype='int32')
     fileCounter = 0
     for pf in positiveFiles:
        with open(pf, "r",encoding='utf-8') as f:
@@ -56,7 +57,9 @@ def processFile(posfile,negfile):
                indexCounter = indexCounter + 1
                if indexCounter >= maxSeqLength:
                    break
+           lens[fileCounter] = indexCounter
            fileCounter = fileCounter + 1
+
 
     for nf in negativeFiles:
        with open(nf, "r",encoding='utf-8') as f:
@@ -72,8 +75,10 @@ def processFile(posfile,negfile):
                indexCounter = indexCounter + 1
                if indexCounter >= maxSeqLength:
                    break
+           lens[fileCounter] = indexCounter
            fileCounter = fileCounter + 1
     np.save('idsMatrix', ids)
+    np.save('lens', lens)
 
 def getlabels(posfile,negfile):
     positiveFiles = [posfile + f for f
@@ -92,6 +97,7 @@ embd = np.load("embd.npy")
 if not isfile("idsMatrix.npy"):
     processFile(posfile, negfile)
 ids = np.load("idsMatrix.npy")
+lens = np.load("lens.npy")
 if not isfile("labels.npy"):
     getlabels(posfile, negfile)
 labels = np.load("labels.npy")
