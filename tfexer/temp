@@ -24,3 +24,5 @@ def extract_images(f):
     data = numpy.frombuffer(buf, dtype=numpy.uint8)
     data = data.reshape(num_images, rows, cols, 1)
     return data
+
+   test
