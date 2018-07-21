@@ -1,0 +1,28 @@
+import tensorflow as tf
+import pandas as pd
+import numpy as np
+from matplotlib import pyplot as plt
+pd.__version__
+c = tf.constant('hello,world')
+city_names = pd.Series(['San Francisco', 'San Jose', 'Sacramento'])
+population = pd.Series([852469, 1015785, 485199])
+cities=pd.DataFrame({ 'City name': city_names, 'Population': population })
+california_housing_dataframe = pd.read_csv("./california_housing_train.csv", sep=",")
+
+
+california_housing_dataframe.hist('housing_median_age')
+plt.show()
+population = np.log(population)
+my_feature = california_housing_dataframe["total_rooms"]
+print(type(my_feature))
+'''cities['Area square miles'] = pd.Series([46.87, 176.53, 97.92])
+cities['Population density'] = cities['Population'] / cities['Area square miles']
+squre = cities['Area square miles'].apply(lambda val: val > 50)
+name = cities['City name'].apply(lambda val: val.startswith('San'))
+
+cities['New'] = squre & name
+print(cities['New'])
+with tf.Session() as sess:
+    print (sess.run(c).decode('utf-8'))
+cities.reindex([0, 4, 5, 2])'''
+
