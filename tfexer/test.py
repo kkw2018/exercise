@@ -5,18 +5,6 @@ from os.path import isfile, join
 import numpy as np
 
 
-
-glove = np.loadtxt("E:/data/glove.6B/glove.6B.50d.txt",dtype=str,encoding='gbk')
-wordsList = glove[:,1]
-np.save('wordsList.npy',wordsList)
-wordVectors = glove[:,2:]
-np.save('wordVectors.npy',wordVectors)
-wordsList = np.load('wordsList.npy')
-print('Loaded the word list!')
-wordsList = wordsList.tolist() #Originally loaded as numpy array
-wordsList = [word.decode('UTF-8') for word in wordsList] #Encode words as UTF-8
-wordVectors = np.load('wordVectors.npy')
-print ('Loaded the word vectors!')
 #
 # vocab_size = 2000
 # embedding_size = 50
