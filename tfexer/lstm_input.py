@@ -5,7 +5,9 @@ from os import listdir
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 from os.path import isfile, join
 import re
-import codecs
+from tensorflow.python.data import Dataset
+import pandas as pd
+
 glove="E:/data/glove.6B/glove.6B.50d.txt"
 emb_size=50
 maxSeqLength=250
@@ -101,6 +103,35 @@ lens = np.load("lens.npy")
 if not isfile("labels.npy"):
     getlabels(posfile, negfile)
 labels = np.load("labels.npy")
-print(lens[-80:-1])
+
+dataframe = pd.DataFrame(ids)
+print(dataframe.describe())
+def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
+    """Trains a linear regression model of one feature.
+
+    Args:
+      features: pandas DataFrame of features
+      targets: pandas DataFrame of targets
+      batch_size: Size of batches to be passed to the model
+      shuffle: True or False. Whether to shuffle the data.
+      num_epochs: Number of epochs for which data should be repeated. None = repeat indefinitely
+    Returns:
+      Tuple of (features, labels) for next data batch
+    """
+
+    # Convert pandas data into a dict of np arrays.
+    features = {key: np.array(value) for key, value in dict(features).items()}
+
+    # Construct a dataset, and configure batching/repeating
+    ds = Dataset.from_tensor_slices((features, targets))  # warning: 2GB limit
+    ds = ds.batch(batch_size).repeat(num_epochs)
+
+    # Shuffle the data, if specified
+    if shuffle:
+        ds = ds.shuffle(10000)
+
+    # Return the next batch of data
+    features, labels = ds.make_one_shot_iterator().get_next()
+    return features, labels
 
 

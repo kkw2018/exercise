@@ -93,7 +93,7 @@ import numpy as np
 def lstm_model_fn(features, labels, mode,params):
     # [batch_size x sentence_size x embedding_size]
     inputs = tf.contrib.layers.embed_sequence(
-        features['x'], vocab_size, embedding_size,
+        features['seqs'], vocab_size, embedding_size,
         initializer=tf.random_uniform_initializer(-1.0, 1.0))
 
     # create an LSTM cell of size 100
