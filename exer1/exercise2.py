@@ -24,5 +24,6 @@ with g.as_default():
       #  print(sum.eval())
       #  print(sum2.eval())
         print (result.eval())
+        print('123')
 
 
