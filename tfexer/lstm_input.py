@@ -117,5 +117,6 @@ def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
     features,labels = ds.make_one_shot_iterator().get_next()
     print(features,labels)
     return features,labels
+
 my_input_fn(features,labels)
 
