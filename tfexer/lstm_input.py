@@ -87,8 +87,8 @@ def getlabels(posfile,negfile):
                      in listdir(posfile) if isfile(join(posfile, f))]
     negativeFiles = [negfile + f for f
                      in listdir(negfile) if isfile(join(negfile, f))]
-    labels = [[1, 0] for row in range(len(positiveFiles))]
-    labels.append([[0, 1] for row in range(len(negativeFiles))])
+    labels = [0 for row in range(len(positiveFiles))]
+    labels.extend([1 for row in range(len(negativeFiles))])
     np.save('labels', labels)
 
 
@@ -107,17 +107,13 @@ labels = np.load("labels.npy")
 features = {'ids':ids,'lens':lens}
 
 def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
-
     features = {key: np.array(value) for key, value in dict(features).items()}
     ds = Dataset.from_tensor_slices((features, targets))  # warning: 2GB limit
-
     ds = ds.batch(batch_size).repeat(num_epochs)
     if shuffle:
-        ds.shuffle(buffer_size=60000)
+        ds = ds.shuffle(buffer_size=60000)
     features,labels = ds.make_one_shot_iterator().get_next()
-    print(features,labels)
     return features,labels
-
 
 my_input_fn(features,labels)
 
