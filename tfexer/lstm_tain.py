@@ -6,7 +6,7 @@ import numpy as np
 import lstm_input
 
 
-#
+
 # vocab_size = 2000
 # embedding_size = 50
 # model_dir = "E:/data"
