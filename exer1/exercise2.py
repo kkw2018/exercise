@@ -22,7 +22,7 @@ with g.as_default():
 
         sess.run(initialization)
       #  print(sum.eval())
-      #  print(sum2.eval())
+        print(sum2.eval())
         print (result.eval())
 
 
