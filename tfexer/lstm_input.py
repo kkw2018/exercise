@@ -118,5 +118,6 @@ def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
     print(features,labels)
     return features,labels
 
+
 my_input_fn(features,labels)
 
