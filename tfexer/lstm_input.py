@@ -104,7 +104,7 @@ if not isfile("labels.npy"):
     getlabels(posfile, negfile)
 labels = np.load("labels.npy")
 
-features = {'ids':ids,'lens':lens}
+features = {'seqs':ids,'len':lens}
 
 def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
     features = {key: np.array(value) for key, value in dict(features).items()}
