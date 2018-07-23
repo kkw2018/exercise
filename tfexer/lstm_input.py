@@ -8,11 +8,16 @@ import re
 from tensorflow.python.data import Dataset
 import pandas as pd
 
-glove="E:/data/glove.6B/glove.6B.50d.txt"
+glove="D:/BaiduYunDownload/glove.6B/glove.6B.50d.txt"
 emb_size=50
 maxSeqLength=250
-posfile="E:/data/aclImdb_v1/aclImdb/train/pos/"
-negfile="E:/data/aclImdb_v1/aclImdb/train/neg/"
+posfile="D:/BaiduYunDownload/aclImdb/train/pos/"
+negfile="D:/BaiduYunDownload/aclImdb/train/neg/"
+model_dir="D:/data/model0"
+keep_prob = 1.0
+num_layers = 3
+
+
 def loadglove(glove):
     vocab = []
     embd = []
@@ -105,7 +110,7 @@ if not isfile("labels.npy"):
 labels = np.load("labels.npy")
 
 features = {'seqs':ids,'len':lens}
-
+print("data loaded")
 def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
     features = {key: np.array(value) for key, value in dict(features).items()}
     ds = Dataset.from_tensor_slices((features, targets))  # warning: 2GB limit
@@ -115,5 +120,6 @@ def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
     features,labels = ds.make_one_shot_iterator().get_next()
     return features,labels
 
-my_input_fn(features,labels)
 
+def construct_feature_columns():
+    return set([tf.feature_column.numeric_column("seqs",shape=250),tf.feature_column.numeric_column("len")])
