@@ -103,11 +103,11 @@ def getlabels(posfile,negfile):
 
 
 if not isfile("vocab.npy"):
-    loadglove(init.glove)
+    loadglove(glove)
 vocab = np.load("vocab.npy").tolist()
 embd = np.load("embd.npy")
 if not isfile("idsMatrix.npy"):
-    processFile(init.posfile, init.negfile)
+    processFile(posfile, negfile)
 ids = np.load("idsMatrix.npy")
 lens = np.load("lens.npy")
 if not isfile("labels.npy"):
