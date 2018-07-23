@@ -80,7 +80,7 @@ def my_model_fn(features,labels,mode,params):
         return tf.estimator.EstimatorSpec(mode=mode, loss=loss, train_op=train_op)
 
     eval_metric_ops = {
-        "accuracy":tf.metrics.accuracy(labels=labels,predictions=predictions["classes"])
+        "accuracy":tf.metrics.accuracy(labels=labels,predictions=predicted_classes)
     }
     return  tf.estimator.EstimatorSpec(mode=mode, loss=loss, eval_metric_ops=eval_metric_ops)
 
