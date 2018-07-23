@@ -6,14 +6,19 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 from os.path import isfile, join
 import re
 from tensorflow.python.data import Dataset
-import pandas as pd
 
-glove="D:/BaiduYunDownload/glove.6B/glove.6B.50d.txt"
+
 emb_size=50
 maxSeqLength=250
-posfile="D:/BaiduYunDownload/aclImdb/train/pos/"
-negfile="D:/BaiduYunDownload/aclImdb/train/neg/"
-model_dir="D:/data/model0"
+# glove="D:/BaiduYunDownload/glove.6B/glove.6B.50d.txt"
+# posfile="D:/BaiduYunDownload/aclImdb/train/pos/"
+# negfile="D:/BaiduYunDownload/aclImdb/train/neg/"
+# model_dir="D:/data/model0"
+
+glove="E:/data/glove.6B/glove.6B.50d.txt"
+posfile="E:/data/aclImdb_v1/aclImdb/train/pos/"
+negfile="E:/data/aclImdb_v1/aclImdb/train/neg/"
+model_dir="E:/data/model0"
 keep_prob = 1.0
 num_layers = 3
 
@@ -98,11 +103,11 @@ def getlabels(posfile,negfile):
 
 
 if not isfile("vocab.npy"):
-    loadglove(glove)
+    loadglove(init.glove)
 vocab = np.load("vocab.npy").tolist()
 embd = np.load("embd.npy")
 if not isfile("idsMatrix.npy"):
-    processFile(posfile, negfile)
+    processFile(init.posfile, init.negfile)
 ids = np.load("idsMatrix.npy")
 lens = np.load("lens.npy")
 if not isfile("labels.npy"):
