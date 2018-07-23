@@ -135,3 +135,4 @@ def lstm_model_fn(features, labels, mode,params):
 #                                          model_dir=os.path.join(model_dir, 'lstm'))
 
 
+print("hello,world")
