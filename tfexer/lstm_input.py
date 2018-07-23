@@ -20,7 +20,7 @@ posfile="E:/data/aclImdb_v1/aclImdb/train/pos/"
 negfile="E:/data/aclImdb_v1/aclImdb/train/neg/"
 model_dir="E:/data/model0"
 keep_prob = 1.0
-num_layers = 3
+num_layers = 2
 
 
 def loadglove(glove):

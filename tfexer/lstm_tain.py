@@ -17,16 +17,17 @@ def lstm_model_fn(features, labels, mode,params):
     inputs = tf.nn.embedding_lookup(lstm_input.embd,features['seqs'])
     print(inputs.get_shape())
     # create an LSTM cell of size 100
-    lstm_cell = tf.contrib.rnn.MultiRNNCell([lstm_cell_func(100) for _ in range(lstm_input.num_layers)])
-
+    #lstm_cell = tf.contrib.rnn.MultiRNNCell([lstm_cell_func(100) for _ in range(lstm_input.num_layers)])
+    lstm_cell = lstm_cell_func(10)
 
     # create the complete LSTM
     outputs, final_states = tf.nn.dynamic_rnn(
         lstm_cell, inputs, sequence_length=features['len'], dtype=tf.float32)
 
     # get the final hidden states of dimensionality [batch_size x sentence_size]
-    outputs = tf.transpose(outputs, [1, 0, 2])
-    outputs = tf.gather(outputs, int(outputs.get_shape()[0]) - 1)
+    outputs = tf.unstack(tf.transpose(outputs, [1, 0, 2]))
+    outputs = outputs[-1]
+    print(outputs.get_shape())
     logits = tf.layers.dense(inputs=outputs, units=2,activation=tf.nn.relu)
     predicted_classes = tf.argmax(logits, 1)
     predictions = {
@@ -59,8 +60,8 @@ lstm_classifier = tf.estimator.Estimator(
 train_input_fn = lambda: lstm_input.my_input_fn(lstm_input.features, lstm_input.labels, batch_size=1)
 predict_input_fn = lambda: lstm_input.my_input_fn(lstm_input.features, lstm_input.labels, num_epochs=1, shuffle=False)
 
-for loop in range(20):
-    lstm_classifier.train(input_fn=train_input_fn, steps=100)
+for loop in range(2000):
+    lstm_classifier.train(input_fn=train_input_fn, steps=10)
     predictions = lstm_classifier.predict(input_fn=predict_input_fn)
     class_ids = np.array([item['class_ids'][0] for item in predictions])
     accuracy = metrics.accuracy_score(lstm_input.labels, class_ids)
@@ -69,4 +70,3 @@ for loop in range(20):
 for file in glob.glob(os.path.join(lstm_classifier.model_dir, 'events.out*')):
     os.remove(file)
 
-print("hello,world")
