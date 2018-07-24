@@ -16,7 +16,8 @@ negfile="D:/BaiduYunDownload/aclImdb/train/neg/"
 model_dir="D:/data/model0"
 keep_prob = 1.0
 num_layers = 3
-
+learning_rate = 0.001
+hidden_size=100
 
 def loadglove(glove):
     vocab = []

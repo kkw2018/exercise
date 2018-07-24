@@ -15,7 +15,6 @@ def lstm_cell_func(lstm_size):
 def lstm_model_fn(features, labels, mode,params):
     # [batch_size x sentence_size x embedding_size]
     inputs = tf.nn.embedding_lookup(lstm_input.embd,features['seqs'])
-    print(inputs.get_shape())
     # create an LSTM cell of size 100
     lstm_cell = tf.contrib.rnn.MultiRNNCell([lstm_cell_func(100) for _ in range(lstm_input.num_layers)])
 
@@ -25,8 +24,7 @@ def lstm_model_fn(features, labels, mode,params):
         lstm_cell, inputs, sequence_length=features['len'], dtype=tf.float32)
 
     # get the final hidden states of dimensionality [batch_size x sentence_size]
-    outputs = tf.transpose(outputs, [1, 0, 2])
-    outputs = tf.gather(outputs, int(outputs.get_shape()[0]) - 1)
+    outputs = tf.reshape(tf.concat(1, outputs), [-1, lstm_input.hidden_size])
     logits = tf.layers.dense(inputs=outputs, units=2,activation=tf.nn.relu)
     predicted_classes = tf.argmax(logits, 1)
     predictions = {
@@ -40,7 +38,7 @@ def lstm_model_fn(features, labels, mode,params):
     loss = tf.losses.softmax_cross_entropy(onehot_labels=tf.one_hot(indices=labels,depth=2),logits=logits)
 
     if mode == tf.estimator.ModeKeys.TRAIN:
-        optimizer = tf.train.AdagradOptimizer(learning_rate=0.001)
+        optimizer = tf.train.AdagradOptimizer(learning_rate=lstm_input.learning_rate)
         train_op = optimizer.minimize(
             loss, global_step=tf.train.get_global_step())
         return tf.estimator.EstimatorSpec(mode=mode, loss=loss, train_op=train_op)
