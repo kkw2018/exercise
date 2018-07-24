@@ -18,7 +18,7 @@ def lstm_model_fn(features, labels, mode,params):
     print(inputs.get_shape())
     # create an LSTM cell of size 100
     #lstm_cell = tf.contrib.rnn.MultiRNNCell([lstm_cell_func(100) for _ in range(lstm_input.num_layers)])
-    lstm_cell = lstm_cell_func(10)
+    lstm_cell = lstm_cell_func(100)
 
     # create the complete LSTM
     outputs, final_states = tf.nn.dynamic_rnn(
@@ -27,7 +27,6 @@ def lstm_model_fn(features, labels, mode,params):
     # get the final hidden states of dimensionality [batch_size x sentence_size]
     outputs = tf.unstack(tf.transpose(outputs, [1, 0, 2]))
     outputs = outputs[-1]
-    print(outputs.get_shape())
     logits = tf.layers.dense(inputs=outputs, units=2,activation=tf.nn.relu)
     predicted_classes = tf.argmax(logits, 1)
     predictions = {
@@ -41,7 +40,7 @@ def lstm_model_fn(features, labels, mode,params):
     loss = tf.losses.softmax_cross_entropy(onehot_labels=tf.one_hot(indices=labels,depth=2),logits=logits)
 
     if mode == tf.estimator.ModeKeys.TRAIN:
-        optimizer = tf.train.AdagradOptimizer(learning_rate=0.001)
+        optimizer = tf.train.AdagradOptimizer(learning_rate=0.1)
         train_op = optimizer.minimize(
             loss, global_step=tf.train.get_global_step())
         return tf.estimator.EstimatorSpec(mode=mode, loss=loss, train_op=train_op)
@@ -62,10 +61,11 @@ predict_input_fn = lambda: lstm_input.my_input_fn(lstm_input.features, lstm_inpu
 
 for loop in range(2000):
     lstm_classifier.train(input_fn=train_input_fn, steps=10)
-    predictions = lstm_classifier.predict(input_fn=predict_input_fn)
-    class_ids = np.array([item['class_ids'][0] for item in predictions])
-    accuracy = metrics.accuracy_score(lstm_input.labels, class_ids)
-    print("accuracy %0.4f in %d" % (accuracy, loop))
+    if loop % 50 == 0 :
+            predictions = lstm_classifier.predict(input_fn=predict_input_fn)
+            class_ids = np.array([item['class_ids'][0] for item in predictions])
+            accuracy = metrics.accuracy_score(lstm_input.labels, class_ids)
+            print("accuracy %0.4f in %d" % (accuracy, loop))
 
 for file in glob.glob(os.path.join(lstm_classifier.model_dir, 'events.out*')):
     os.remove(file)

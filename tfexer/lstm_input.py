@@ -10,17 +10,17 @@ from tensorflow.python.data import Dataset
 
 emb_size=50
 maxSeqLength=250
-# glove="D:/BaiduYunDownload/glove.6B/glove.6B.50d.txt"
-# posfile="D:/BaiduYunDownload/aclImdb/train/pos/"
-# negfile="D:/BaiduYunDownload/aclImdb/train/neg/"
-# model_dir="D:/data/model0"
+glove="D:/BaiduYunDownload/glove.6B/glove.6B.50d.txt"
+posfile="D:/BaiduYunDownload/aclImdb/train/pos/"
+negfile="D:/BaiduYunDownload/aclImdb/train/neg/"
+model_dir="D:/data/model0"
 
-glove="E:/data/glove.6B/glove.6B.50d.txt"
-posfile="E:/data/aclImdb_v1/aclImdb/train/pos/"
-negfile="E:/data/aclImdb_v1/aclImdb/train/neg/"
-model_dir="E:/data/model0"
-keep_prob = 1.0
-num_layers = 2
+# glove="E:/data/glove.6B/glove.6B.50d.txt"
+# posfile="E:/data/aclImdb_v1/aclImdb/train/pos/"
+# negfile="E:/data/aclImdb_v1/aclImdb/train/neg/"
+# model_dir="E:/data/model0"
+# keep_prob = 1.0
+# num_layers = 2
 
 
 def loadglove(glove):
